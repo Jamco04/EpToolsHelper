@@ -124,8 +124,8 @@ window test is skipped when there is no display.
 ## Building eptools.exe
 
 `.github/workflows/build.yml` runs the tests and builds `eptools.exe` with PyInstaller on
-every push to `main`. Pushing a tag such as `v0.2.0` also attaches the exe to a GitHub
-Release. To build it yourself on Windows:
+every push to `main`, and publishes it as a GitHub Release named after the version in
+`eptools/__init__.py`. Bump that version to make a new release. To build it yourself on Windows:
 
 ```
 pip install pyinstaller

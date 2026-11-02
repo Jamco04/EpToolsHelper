@@ -1,12 +1,11 @@
-# Runs the tests on every push, and builds eptools.exe for Windows so the student
-# doesn't need Python installed. Download it from the run's "Artifacts" section,
-# or push a tag such as v0.2.0 to attach it to a GitHub Release.
+# Runs the tests on every push and builds eptools.exe for Windows, so nobody needs Python.
+# Each push to main publishes the exe as a GitHub Release named after the version in
+# eptools/__init__.py. Bump that version to make a new release.
 name: test and build
 
 on:
   push:
     branches: [main]
-    tags: ["v*"]
   pull_request:
   workflow_dispatch:
 
@@ -38,7 +37,18 @@ jobs:
         with:
           name: eptools-windows
           path: dist/eptools.exe
-      - if: startsWith(github.ref, 'refs/tags/v')
+      - name: Read the version
+        id: version
+        shell: bash
+        run: echo "v=$(python -c 'import eptools; print(eptools.__version__)')" >> "$GITHUB_OUTPUT"
+      - if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         uses: softprops/action-gh-release@v2
         with:
+          tag_name: v${{ steps.version.outputs.v }}
+          name: eptools ${{ steps.version.outputs.v }}
+          target_commitish: ${{ github.sha }}
+          make_latest: true
+          body: |
+            Download **eptools.exe** below and double-click it. You also need EnergyPlus installed.
+            See the README for how to use it.
           files: dist/eptools.exe
