@@ -1,0 +1,52 @@
+{
+  "energyplus": "C:/EnergyPlusV26-2-0/energyplus.exe",
+  "weather": "../models/IRL_Dublin.039690_IWEC.epw",
+  "output_dir": "../runs/example",
+  "jobs": 2,
+
+  "models": {
+    "bungalow": "../models/Bungalow Original.idf",
+    "detached": "../models/Detached Original.idf"
+  },
+
+  "fixed": [
+    { "object": "Timestep", "field": 1, "set": 4 }
+  ],
+
+  "parameters": {
+    "wall_insulation_m": {
+      "object": "Material", "name": "EPS Expanded Polystyrene*", "field": "Thickness",
+      "values": [0.0515, 0.1, 0.15]
+    },
+    "window_u": {
+      "object": "WindowMaterial:SimpleGlazingSystem", "name": "*", "field": "U-Factor",
+      "values": [3.0, 1.4]
+    },
+    "infiltration_factor": {
+      "object": "ZoneInfiltration:DesignFlowRate", "name": "*", "field": "Design Flow Rate",
+      "multiply": [1.0, 0.5]
+    },
+    "heating_setpoint_c": {
+      "object": "Schedule:Compact", "name": "*Heating Setpoint Schedule", "replace": 21,
+      "values": [20, 21]
+    }
+  },
+
+  "outputs": {
+    "replace_existing": true,
+    "sqlite": false,
+    "add": [
+      "Output:Variable,*,Zone Ideal Loads Supply Air Total Heating Energy,Hourly;",
+      "Output:Variable,*,Zone Mean Air Temperature,Hourly;",
+      "Output:Meter,DistrictHeatingWater:Facility,Hourly;",
+      "Output:Meter,Electricity:Facility,Hourly;"
+    ]
+  },
+
+  "collect": {
+    "hourly": [
+      "Zone Ideal Loads Supply Air Total Heating Energy",
+      "DistrictHeatingWater:Facility"
+    ]
+  }
+}

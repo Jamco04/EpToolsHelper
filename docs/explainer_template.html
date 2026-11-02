@@ -1,0 +1,247 @@
+<title>EnergyPlus Error Explainer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;700;800&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: single column tool. Drop zone on top, verdict banner, grouped message cards, then the decoded example run. */
+:root {
+  --bg: #f6f8f9; --surface: #ffffff; --ink: #14232b; --muted: #55666f; --line: #d6dee2;
+  --accent: #0e6e7a; --heat: #c2531b;
+  --fix: #b3261e; --fix-bg: #fbe3db; --check: #7a4a05; --check-bg: #fbefd9; --ok: #145b4c; --ok-bg: #e3f1ee;
+  --code-bg: #eaf0f2;
+  --display: "Archivo", "Helvetica Neue", Arial, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f171b; --surface: #152127; --ink: #e3ebee; --muted: #9db0b8; --line: #2a3a42;
+    --accent: #5cc3cf; --heat: #f08a55;
+    --fix: #ffb48f; --fix-bg: #45200f; --check: #f3cf8a; --check-bg: #3d2e10; --ok: #9fe0cf; --ok-bg: #143a33;
+    --code-bg: #1b2a31; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f171b; --surface: #152127; --ink: #e3ebee; --muted: #9db0b8; --line: #2a3a42;
+  --accent: #5cc3cf; --heat: #f08a55;
+  --fix: #ffb48f; --fix-bg: #45200f; --check: #f3cf8a; --check-bg: #3d2e10; --ok: #9fe0cf; --ok-bg: #143a33;
+  --code-bg: #1b2a31; color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--ink); font-family: var(--body); font-size: 16px; line-height: 1.6; }
+.wrap { max-width: 900px; margin: 0 auto; padding-block: 36px 80px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.eyebrow { font-family: var(--mono); font-size: 13px; color: var(--accent); margin: 0 0 8px; }
+h1 { font-family: var(--display); font-weight: 800; font-size: clamp(30px, 5vw, 44px); line-height: 1.05; margin: 0 0 12px; text-wrap: balance; }
+h2 { font-family: var(--display); font-weight: 700; font-size: 24px; margin: 0 0 12px; text-wrap: balance; }
+p { max-width: 68ch; }
+.lede { color: var(--muted); font-size: 17px; margin: 0; }
+a { color: var(--accent); }
+code { font-family: var(--mono); font-size: .88em; background: var(--code-bg); padding: 1px 5px; border-radius: 4px; }
+pre { font-family: var(--mono); font-size: 13px; background: var(--code-bg); padding: 14px 16px; border-radius: 8px; overflow-x: auto; }
+section { margin-top: 36px; }
+.drop { margin-top: 24px; border: 2px dashed var(--line); border-radius: 10px; background: var(--surface); padding: 22px; display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center; }
+.drop.over { border-color: var(--accent); }
+.drop p { margin: 0; flex: 1 1 260px; min-width: 0; }
+button, .filebtn { font: 600 14px var(--body); border-radius: 6px; padding: 8px 14px; cursor: pointer; border: 1px solid var(--accent); background: var(--accent); color: var(--surface); }
+button.ghost { background: transparent; color: var(--accent); }
+button:focus-visible, .filebtn:focus-within { outline: 2px solid var(--accent); outline-offset: 2px; }
+.filebtn input { position: absolute; width: 1px; height: 1px; opacity: 0; }
+.filebtn { position: relative; display: inline-block; }
+.banner { margin-top: 20px; border-radius: 10px; padding: 16px 20px; display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: baseline; }
+.banner.OK { background: var(--ok-bg); color: var(--ok); }
+.banner.SUSPECT { background: var(--check-bg); color: var(--check); }
+.banner.FAILED { background: var(--fix-bg); color: var(--fix); }
+.banner strong { font-family: var(--display); font-size: 22px; }
+.banner span { font-family: var(--mono); font-size: 14px; }
+.source { font-size: 14px; color: var(--muted); margin: 8px 0 0; }
+.groups { display: grid; gap: 12px; margin-top: 16px; }
+.card { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 14px 18px; min-width: 0; }
+.card header { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: baseline; }
+.card h3 { font-family: var(--display); font-size: 17px; margin: 0; flex: 1 1 240px; }
+.chip { font-family: var(--mono); font-size: 12px; font-weight: 500; padding: 1px 8px; border-radius: 999px; white-space: nowrap; }
+.chip.FIX { background: var(--fix-bg); color: var(--fix); }
+.chip.CHECK { background: var(--check-bg); color: var(--check); }
+.chip.IGNORE { background: var(--ok-bg); color: var(--ok); }
+.count { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+.card p { margin: 8px 0 0; font-size: 15px; }
+.card .note { font-family: var(--mono); font-size: 13px; color: var(--ink); }
+details { margin-top: 8px; font-size: 14px; }
+summary { cursor: pointer; color: var(--accent); }
+details ul { margin: 6px 0 0; padding-left: 18px; font-family: var(--mono); font-size: 12.5px; overflow-wrap: anywhere; }
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 12px; margin-top: 14px; }
+.stat { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 12px 14px; }
+.stat b { display: block; font-family: var(--display); font-size: 24px; font-variant-numeric: tabular-nums; }
+.stat span { font-size: 13px; color: var(--muted); }
+ul.plain { padding-left: 20px; } ul.plain li { margin-bottom: 8px; max-width: 70ch; }
+footer { margin-top: 40px; font-size: 13px; color: var(--muted); }
+</style>
+
+<div class="wrap">
+  <p class="eyebrow">JOD01 · EnergyPlus 26.2</p>
+  <h1>EnergyPlus error explainer</h1>
+  <p class="lede">Drop in an <code>.err</code> file from any EnergyPlus run. Each warning is grouped, labelled fix, check or ignore, and explained in plain English. The file is read in your browser and isn't uploaded anywhere.</p>
+
+  <div class="drop" id="drop">
+    <p>Drag an <code>.err</code> file here, or choose one.</p>
+    <label class="filebtn">Choose .err file<input type="file" id="file" accept=".err,.txt"></label>
+    <button class="ghost" id="example" type="button">Show the Bungalow example</button>
+  </div>
+
+  <div id="banner" class="banner OK"></div>
+  <p class="source" id="source"></p>
+  <div class="groups" id="groups"></div>
+
+  <section id="bungalow">
+    <h2>What the first Bungalow run tells us</h2>
+    <p>From the HTML summary, CSV and audit files of the first Bungalow run on 29 October 2026 (EnergyPlus 26.2.0, Dublin IWEC weather).</p>
+    <div class="stats">
+      <div class="stat"><b>10,574 kWh</b><span>space heating per year</span></div>
+      <div class="stat"><b>123 kWh/m²</b><span>heating over 85.9 m² floor area</span></div>
+      <div class="stat"><b>3,703 kWh</b><span>hot water heating per year</span></div>
+      <div class="stat"><b>6.4 kW</b><span>sized heating capacity, all rooms</span></div>
+      <div class="stat"><b>487 h</b><span>heating setpoint not met (0 h while occupied)</span></div>
+    </div>
+    <ul class="plain">
+      <li><strong>The run is usable.</strong> 49 warnings and 0 severe errors. Everything in the list above is either expected from a DesignBuilder export or worth one check.</li>
+      <li><strong>The CSV is missing the heating results.</strong> ReadVarsESO stopped at 255 columns (see the <code>.rvaudit</code> file), so the ideal loads heating columns never reached <code>Bungalow Original.csv</code>. They are in the <code>.eso</code> file. Trim the output list or read the <code>.eso</code>/<code>.sql</code> instead.</li>
+      <li><strong>Heating shows up as “District Heating Water”.</strong> Ideal loads systems and unconnected hot-water use are metered as district heating. Those figures are the <em>heat delivered</em>, which is what a heat pump would have to supply. They are not electricity.</li>
+      <li><strong>The 487 unmet hours all fall outside occupied periods.</strong> The ideal loads are capped at their sized capacity (calculated load × 1.25), so rooms warm up slowly after a setback. This matters for a buffer-tank study, because pre-heating is exactly what a tank enables.</li>
+      <li><strong>Sizing gives a heat pump starting point.</strong> The calculated room design loads add up to about 5.1 kW, or 6.4 kW with the 1.25 sizing factor (<em>Zone Sensible Heating</em> table in the HTML report).</li>
+      <li><strong>Electricity is only lights and appliances</strong> (999 kWh and 1,319 kWh). There is no heat pump in the model, so heat pump electricity has to be worked out from the heat demand in Python.</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Checking hundreds of runs</h2>
+    <p>The same rules are in the <code>eptools</code> Python package (no AI, no dependencies). It explains each run, flags failed or suspect runs, reads heating and unmet hours from the HTML report, warns when the CSV was truncated, and can compare each run with a baseline.</p>
+<pre><code>python -m eptools check runs/example/run_0001 --baseline runs/example/run_0002 --html report.html
+python -m eptools check runs/example/run_* --quiet     # hide the IGNORE items</code></pre>
+    <p><code>python -m eptools run study.json</code> runs a whole parameter matrix and does this check on every run automatically. New messages show up as “Not in the rule list yet”. Add a rule to <code>RULES</code> in <code>eptools/check.py</code> and rebuild this page with <code>python docs/build_explainer.py</code>.</p>
+  </section>
+
+  <footer>Rules written for the five JOD01 DesignBuilder archetype models and checked against a real EnergyPlus 26.2.0 run. Labels are guidance. Read the message itself when in doubt.</footer>
+</div>
+
+<script>
+const EXAMPLE = __EXAMPLE__;
+const ORDER = { FIX: 0, CHECK: 1, IGNORE: 2 };
+const R = (id, pattern, verdict, title, meaning, action) => ({ id, re: new RegExp(pattern, "i"), verdict, title, meaning, action });
+const RULES = __RULES__.map(r => R(...r));
+const SEVERE = R("severe", ".", "FIX", "Severe error", "EnergyPlus found something it considers wrong. Results from this run should not be trusted.", "Read the message and its continuation lines, then look it up in the Input Output Reference or on unmethours.com.");
+const FATAL = R("fatal", ".", "FIX", "Fatal error (run stopped)", "The run stopped. The Severe messages before this line explain why.", "Fix the first Severe message, then re-run.");
+const UNKNOWN = R("unknown", ".", "CHECK", "Not in the rule list yet", "This message isn't covered by the explainer's rules.", "Search the message on unmethours.com.");
+
+function classify(m) {
+  if (m.level === "Fatal") return FATAL;
+  for (const r of RULES) if (r.re.test(m.text)) return (m.level === "Warning" || r.verdict === "FIX") ? r : SEVERE;
+  return m.level === "Severe" ? SEVERE : UNKNOWN;
+}
+
+function parse(text) {
+  const out = { version: "", completed: null, warnings: null, severe: null, messages: [], recurring: {} };
+  const lines = text.split(/\r?\n/);
+  const vm = (lines[0] || "").match(/Version ([\d.]+)/); if (vm) out.version = vm[1];
+  const LEVEL = /^\s*\*\*\s*(Warning|Severe|Fatal)\s*\*\*\s?(.*)$/, CONT = /^\s*\*\*\s+~~~\s+\*\*\s?(.*)$/, STAR = /^\s*\*{13}\s?(.*)$/;
+  const SUM = /EnergyPlus (Completed Successfully|Terminated).*?(\d+) Warning; (\d+) Severe/;
+  let cur = null, inRec = false, recKey = null;
+  for (const line of lines) {
+    if (line.includes("Recurring Error Summary")) { inRec = true; cur = null; continue; }
+    if (line.includes("Final Error Summary")) inRec = false;
+    const s = line.match(SUM);
+    if (s) { out.completed = s[1].startsWith("Completed"); out.warnings = +s[2]; out.severe = +s[3]; continue; }
+    if (inRec) {
+      const st = line.match(STAR), inner = st ? st[1] : line, lv = inner.match(LEVEL);
+      if (lv) { recKey = lv[2].trim(); out.recurring[recKey] = { total: 0, Warmup: 0, Sizing: 0 }; }
+      else if (recKey) {
+        const c = inner.match(/occurred (\d+) total times/); if (c) out.recurring[recKey].total = +c[1];
+        for (const p of inner.matchAll(/during (Warmup|Sizing) (\d+) times/g)) out.recurring[recKey][p[1]] = +p[2];
+      }
+      continue;
+    }
+    const lv = line.match(LEVEL);
+    if (lv) { cur = { level: lv[1], text: lv[2].trim(), detail: [] }; out.messages.push(cur); continue; }
+    const ct = line.match(CONT);
+    if (ct && cur) { cur.detail.push(ct[1].trim()); continue; }
+    const st = line.match(STAR);
+    if (st && cur && st[1].startsWith("Key=")) { cur.detail.push(st[1].trim()); continue; }
+    if (st && /There are \d+ unused/.test(st[1])) { cur = { level: "Warning", text: st[1].trim(), detail: [] }; out.messages.push(cur); continue; }
+    if (st) cur = null;
+  }
+  if (out.completed === null && out.messages.some(m => m.level === "Fatal")) out.completed = false;
+  out.messages.forEach(m => m.rule = classify(m));
+  return out;
+}
+
+function group(rep) {
+  const map = new Map();
+  for (const m of rep.messages) { if (!map.has(m.rule.id)) map.set(m.rule.id, []); map.get(m.rule.id).push(m); }
+  const groups = [...map.values()].map(msgs => {
+    const g = { rule: msgs[0].rule, msgs, verdict: msgs[0].rule.verdict, note: "" };
+    if (g.rule.id === "psych-temp") {
+      const key = Object.keys(rep.recurring).find(k => k.includes("PsyPsatFnTemp"));
+      if (key) {
+        const r = rep.recurring[key], inRun = r.total - r.Warmup - r.Sizing;
+        g.note = `${r.total} occurrences: ${r.Sizing} during sizing, ${r.Warmup} during warm-up, ${inRun} during the run.`;
+        g.verdict = (inRun === 0 && r.Warmup === 0) ? "IGNORE" : "FIX";
+      }
+    }
+    return g;
+  });
+  groups.sort((a, b) => ORDER[a.verdict] - ORDER[b.verdict] || b.msgs.length - a.msgs.length);
+  return groups;
+}
+
+const el = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+
+function render(text, label) {
+  const rep = parse(text), groups = group(rep);
+  const status = (rep.completed === false || rep.severe > 0) ? "FAILED" : groups.some(g => g.verdict === "FIX") ? "SUSPECT" : "OK";
+  const words = { OK: "Run looks usable", SUSPECT: "Run finished, but check the FIX items", FAILED: "Run failed or has severe errors" };
+  const banner = document.getElementById("banner");
+  banner.className = "banner " + status; banner.replaceChildren();
+  banner.append(el("strong", null, words[status]));
+  if (rep.warnings !== null) banner.append(el("span", null, `${rep.warnings} warnings · ${rep.severe} severe`));
+  if (rep.version) banner.append(el("span", null, "EnergyPlus " + rep.version));
+  const counts = { FIX: 0, CHECK: 0, IGNORE: 0 }; groups.forEach(g => counts[g.verdict]++);
+  banner.append(el("span", null, `${counts.FIX} fix · ${counts.CHECK} check · ${counts.IGNORE} ignore`));
+  document.getElementById("source").textContent = "Showing: " + label;
+
+  const box = document.getElementById("groups"); box.replaceChildren();
+  if (!rep.messages.length) box.append(el("p", null, "No warnings or errors found in this file. Check it is an EnergyPlus .err file."));
+  for (const g of groups) {
+    const card = el("article", "card"), head = el("header");
+    head.append(el("span", "chip " + g.verdict, g.verdict.toLowerCase()), el("h3", null, g.rule.title), el("span", "count", "×" + g.msgs.length));
+    card.append(head, el("p", null, g.rule.meaning));
+    const act = el("p"); act.append(el("strong", null, "What to do: "), document.createTextNode(g.rule.action)); card.append(act);
+    if (g.note) card.append(el("p", "note", g.note));
+    const keys = g.msgs.flatMap(m => m.detail.filter(d => d.startsWith("Key=")));
+    const det = el("details"), sum = el("summary", null, keys.length ? `Show the ${keys.length} outputs not produced` : `Show the message${g.msgs.length > 1 ? "s" : ""}`);
+    const ul = el("ul");
+    if (keys.length) {
+      const names = [...new Set(keys.map(k => k.replace(/Key=[^,]*, VarName=([^,]+),.*/, "$1")))].sort();
+      names.forEach(n => ul.append(el("li", null, n)));
+    } else {
+      g.msgs.slice(0, 25).forEach(m => ul.append(el("li", null, `${m.level}: ${m.text}` + (m.detail.length ? "  — " + m.detail.join(" ") : ""))));
+      if (g.msgs.length > 25) ul.append(el("li", null, `…and ${g.msgs.length - 25} more`));
+    }
+    det.append(sum, ul); card.append(det); box.append(card);
+  }
+}
+
+function readFile(f) {
+  if (!f) return;
+  const r = new FileReader();
+  r.onload = () => render(String(r.result), f.name);
+  r.onerror = () => { document.getElementById("source").textContent = "Couldn't read that file. Try choosing it again."; };
+  r.readAsText(f);
+}
+
+document.getElementById("file").addEventListener("change", e => readFile(e.target.files[0]));
+document.getElementById("example").addEventListener("click", () => render(EXAMPLE, "Bungalow Original.err (example run, 29 Oct 2026)"));
+const drop = document.getElementById("drop");
+["dragenter", "dragover"].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.add("over"); }));
+["dragleave", "drop"].forEach(t => drop.addEventListener(t, e => { e.preventDefault(); drop.classList.remove("over"); }));
+drop.addEventListener("drop", e => readFile(e.dataTransfer.files[0]));
+render(EXAMPLE, "Bungalow Original.err (example run, 29 Oct 2026)");
+</script>

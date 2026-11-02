@@ -1,0 +1,37 @@
+! A tiny made-up model for the tests. EnergyPlus would not run it; the fake runner doesn't care.
+
+  Version,26.2;
+
+  Timestep,2;
+
+  Material,
+    EPS Insulation_0.05,     !- Name
+    Rough,                   !- Roughness
+    .05,                     !- Thickness {m}
+    0.04,                    !- Conductivity {W/m-K}
+    15,                      !- Density {kg/m3}
+    1400;                    !- Specific Heat {J/kg-K}
+
+  WindowMaterial:SimpleGlazingSystem,
+    Simple 1001,             !- Name
+    3,                       !- U-Factor {W/m2-K}
+    .4,                      !- Solar Heat Gain Coefficient
+    .56;                     !- Visible Transmittance
+
+  ZoneInfiltration:DesignFlowRate,
+    Zone A Infiltration,     !- Name
+    Zone A,                  !- Zone or ZoneList or Space or SpaceList Name
+    On 24/7,                 !- Schedule Name
+    Flow/zone,               !- Design Flow Rate Calculation Method
+    .02;                     !- Design Flow Rate {m3/s}
+
+  Schedule:Compact,
+    Zone A Heating Setpoint Schedule,  !- Name
+    Temperature,             !- Schedule Type Limits Name
+    Through: 31 Dec,         !- Field 1
+    For: AllDays,            !- Field 2
+    Until: 07:00,12,         !- Field 3
+    Until: 23:00,21,         !- Field 5
+    Until: 24:00,12;         !- Field 7
+
+  Output:Variable,*,Zone Mean Air Temperature,Monthly;

@@ -1,0 +1,224 @@
+Program Version,EnergyPlus, Version 26.2.0-4bd7a1f26f, YMD=2026.10.29 11:52,
+   ** Warning ** Timestep: Requested number (2) is less than the suggested minimum of 4.
+   **   ~~~   ** Please see entry for Timestep in Input/Output Reference for discussion of considerations.
+   ************* Beginning Zone Sizing Calculations
+   ** Warning ** GetSurfaceData: Construction 9MM PLASTERBOARD ON 50*100MM STUDS AT 400 CENTRES of interzone surface GROUNDXFLOOR:CORRIDOR_PARTITION_2_0_0 does not have the same materials in the reverse order as the construction 9MM PLASTERBOARD ON 50*100MM STUDS AT 400 CENTRES_REV of adjacent surface GROUNDXFLOOR:LIVINGXROOM_PARTITION_5_0_10010
+   **   ~~~   ** or the properties of the reversed layers are not correct due to differing layer front and back side values
+   **   ~~~   ** ...but Nominal U values are similar, diff=[0.0000] ... simulation proceeds.
+   **   ~~~   ** ...if the two zones are expected to have significantly different temperatures, the proper "reverse" construction should be created.
+   **   ~~~   ** ...this problem for this pair will not be reported again.
+   ** Warning ** GetSurfaceData: Entered Zone Floor Area(s) differ more than 5% from the sum of the Space Floor Area(s).
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ************* Note that the following warning(s) may/will occur if you have not enclosed your zone completely.
+   ** Warning ** Entered Zone Volumes differ from calculated zone volume(s).
+   **   ~~~   ** ...use Output:Diagnostics,DisplayExtraWarnings; to show more details on individual zones.
+   ** Warning ** CheckUsedConstructions: There are 7 nominally unused constructions in input.
+   **   ~~~   ** For explicit details on each unused construction, use Output:Diagnostics,DisplayExtraWarnings;
+   ** Warning ** GetInternalHeatGains: People="PEOPLE GROUNDXFLOOR:CORRIDOR" has comfort related schedules but no thermal comfort model selected.
+   **   ~~~   ** If schedules are specified for air velocity, clothing insulation, and/or work efficiency but no thermal comfort
+   **   ~~~   ** thermal comfort model is selected, the schedules will be listed as unused schedules in the .err file.
+   **   ~~~   ** To avoid these errors, select a valid thermal comfort model or eliminate these schedules in the PEOPLE input.
+   ** Warning ** GetInternalHeatGains: People="PEOPLE GROUNDXFLOOR:LIVINGXROOM" has comfort related schedules but no thermal comfort model selected.
+   **   ~~~   ** If schedules are specified for air velocity, clothing insulation, and/or work efficiency but no thermal comfort
+   **   ~~~   ** thermal comfort model is selected, the schedules will be listed as unused schedules in the .err file.
+   **   ~~~   ** To avoid these errors, select a valid thermal comfort model or eliminate these schedules in the PEOPLE input.
+   ** Warning ** GetInternalHeatGains: People="PEOPLE GROUNDXFLOOR:BR2" has comfort related schedules but no thermal comfort model selected.
+   **   ~~~   ** If schedules are specified for air velocity, clothing insulation, and/or work efficiency but no thermal comfort
+   **   ~~~   ** thermal comfort model is selected, the schedules will be listed as unused schedules in the .err file.
+   **   ~~~   ** To avoid these errors, select a valid thermal comfort model or eliminate these schedules in the PEOPLE input.
+   ** Warning ** GetInternalHeatGains: People="PEOPLE GROUNDXFLOOR:BR1" has comfort related schedules but no thermal comfort model selected.
+   **   ~~~   ** If schedules are specified for air velocity, clothing insulation, and/or work efficiency but no thermal comfort
+   **   ~~~   ** thermal comfort model is selected, the schedules will be listed as unused schedules in the .err file.
+   **   ~~~   ** To avoid these errors, select a valid thermal comfort model or eliminate these schedules in the PEOPLE input.
+   ** Warning ** GetInternalHeatGains: People="PEOPLE GROUNDXFLOOR:BR3" has comfort related schedules but no thermal comfort model selected.
+   **   ~~~   ** If schedules are specified for air velocity, clothing insulation, and/or work efficiency but no thermal comfort
+   **   ~~~   ** thermal comfort model is selected, the schedules will be listed as unused schedules in the .err file.
+   **   ~~~   ** To avoid these errors, select a valid thermal comfort model or eliminate these schedules in the PEOPLE input.
+   ** Warning ** GetInternalHeatGains: People="PEOPLE GROUNDXFLOOR:BATHROOM" has comfort related schedules but no thermal comfort model selected.
+   **   ~~~   ** If schedules are specified for air velocity, clothing insulation, and/or work efficiency but no thermal comfort
+   **   ~~~   ** thermal comfort model is selected, the schedules will be listed as unused schedules in the .err file.
+   **   ~~~   ** To avoid these errors, select a valid thermal comfort model or eliminate these schedules in the PEOPLE input.
+   ** Warning ** GetInternalHeatGains: People="PEOPLE GROUNDXFLOOR:KITCHEN" has comfort related schedules but no thermal comfort model selected.
+   **   ~~~   ** If schedules are specified for air velocity, clothing insulation, and/or work efficiency but no thermal comfort
+   **   ~~~   ** thermal comfort model is selected, the schedules will be listed as unused schedules in the .err file.
+   **   ~~~   ** To avoid these errors, select a valid thermal comfort model or eliminate these schedules in the PEOPLE input.
+   ** Warning ** GetInternalHeatGains: People="PEOPLE GROUNDXFLOOR:DININGXROOM" has comfort related schedules but no thermal comfort model selected.
+   **   ~~~   ** If schedules are specified for air velocity, clothing insulation, and/or work efficiency but no thermal comfort
+   **   ~~~   ** thermal comfort model is selected, the schedules will be listed as unused schedules in the .err file.
+   **   ~~~   ** To avoid these errors, select a valid thermal comfort model or eliminate these schedules in the PEOPLE input.
+   ** Warning ** Calculated design cooling load for zone=GROUNDXFLOOR:CORRIDOR is zero.
+   **   ~~~   ** Check Sizing:Zone and ZoneControl:Thermostat inputs.
+   ** Warning ** Calculated design cooling load for zone=GROUNDXFLOOR:LIVINGXROOM is zero.
+   **   ~~~   ** Check Sizing:Zone and ZoneControl:Thermostat inputs.
+   ** Warning ** Calculated design cooling load for zone=GROUNDXFLOOR:BR2 is zero.
+   **   ~~~   ** Check Sizing:Zone and ZoneControl:Thermostat inputs.
+   ** Warning ** Calculated design cooling load for zone=GROUNDXFLOOR:BR1 is zero.
+   **   ~~~   ** Check Sizing:Zone and ZoneControl:Thermostat inputs.
+   ** Warning ** Calculated design cooling load for zone=GROUNDXFLOOR:BR3 is zero.
+   **   ~~~   ** Check Sizing:Zone and ZoneControl:Thermostat inputs.
+   ** Warning ** Calculated design cooling load for zone=GROUNDXFLOOR:BATHROOM is zero.
+   **   ~~~   ** Check Sizing:Zone and ZoneControl:Thermostat inputs.
+   ** Warning ** Calculated design cooling load for zone=GROUNDXFLOOR:KITCHEN is zero.
+   **   ~~~   ** Check Sizing:Zone and ZoneControl:Thermostat inputs.
+   ** Warning ** Calculated design cooling load for zone=GROUNDXFLOOR:DININGXROOM is zero.
+   **   ~~~   ** Check Sizing:Zone and ZoneControl:Thermostat inputs.
+   ** Warning ** Temperature out of range [-100. to 200.] (PsyPsatFnTemp)
+   **   ~~~   **  Routine=CalcPurchAirLoads, During Sizing, Environment=WINTER DESIGN DAY IN BUNG2 (01-01:31-12), at Simulation time=01/15 23:30 - 24:00
+   **   ~~~   **  Input Temperature=-2203.19
+   ** Warning ** Output:Meter: invalid Key Name="NATURALGAS:FACILITY" - not found.
+   ** Warning ** Output:Meter: invalid Key Name="NATURALGAS:FACILITY" - not found.
+   ** Warning ** Output:Meter: invalid Key Name="ELECTRIC EQUIPMENT#ROOF1:ZONE1#07:INTERIOREQUIPMENT*" - not found.
+   ** Warning ** Output:Meter: invalid Key Name="ELECTRIC EQUIPMENT#GROUNDXFLOOR:CORRIDOR#07:INTERIOREQUIPMENT*" - not found.
+   ** Warning ** Output:Meter: invalid Key Name="ELECTRIC EQUIPMENT#GROUNDXFLOOR:LIVINGXROOM#07:INTERIOREQUIPMENT*" - not found.
+   ** Warning ** Output:Meter: invalid Key Name="ELECTRIC EQUIPMENT#GROUNDXFLOOR:BR2#07:INTERIOREQUIPMENT*" - not found.
+   ** Warning ** Output:Meter: invalid Key Name="ELECTRIC EQUIPMENT#GROUNDXFLOOR:BR1#07:INTERIOREQUIPMENT*" - not found.
+   ** Warning ** Output:Meter: invalid Key Name="ELECTRIC EQUIPMENT#GROUNDXFLOOR:BR3#07:INTERIOREQUIPMENT*" - not found.
+   ** Warning ** Output:Meter: invalid Key Name="ELECTRIC EQUIPMENT#GROUNDXFLOOR:BATHROOM#07:INTERIOREQUIPMENT*" - not found.
+   ** Warning ** Output:Meter: invalid Key Name="ELECTRIC EQUIPMENT#GROUNDXFLOOR:KITCHEN#07:INTERIOREQUIPMENT*" - not found.
+   ** Warning ** Output:Meter: invalid Key Name="ELECTRIC EQUIPMENT#GROUNDXFLOOR:DININGXROOM#07:INTERIOREQUIPMENT*" - not found.
+   ** Warning ** Output:Meter: invalid Key Name="ELECTRIC EQUIPMENT#ROOF1:ZONE1#07:INTERIOREQUIPMENT*" - not found.
+   ** Warning ** Output:Meter: invalid Key Name="ELECTRIC EQUIPMENT#GROUNDXFLOOR:CORRIDOR#07:INTERIOREQUIPMENT*" - not found.
+   ** Warning ** Output:Meter: invalid Key Name="ELECTRIC EQUIPMENT#GROUNDXFLOOR:LIVINGXROOM#07:INTERIOREQUIPMENT*" - not found.
+   ** Warning ** Output:Meter: invalid Key Name="ELECTRIC EQUIPMENT#GROUNDXFLOOR:BR2#07:INTERIOREQUIPMENT*" - not found.
+   ** Warning ** Output:Meter: invalid Key Name="ELECTRIC EQUIPMENT#GROUNDXFLOOR:BR1#07:INTERIOREQUIPMENT*" - not found.
+   ** Warning ** Output:Meter: invalid Key Name="ELECTRIC EQUIPMENT#GROUNDXFLOOR:BR3#07:INTERIOREQUIPMENT*" - not found.
+   ** Warning ** Output:Meter: invalid Key Name="ELECTRIC EQUIPMENT#GROUNDXFLOOR:BATHROOM#07:INTERIOREQUIPMENT*" - not found.
+   ** Warning ** Output:Meter: invalid Key Name="ELECTRIC EQUIPMENT#GROUNDXFLOOR:KITCHEN#07:INTERIOREQUIPMENT*" - not found.
+   ** Warning ** Output:Meter: invalid Key Name="ELECTRIC EQUIPMENT#GROUNDXFLOOR:DININGXROOM#07:INTERIOREQUIPMENT*" - not found.
+   ************* Testing Individual Branch Integrity
+   ************* All Branches passed integrity testing
+   ************* Testing Individual Supply Air Path Integrity
+   ************* All Supply Air Paths passed integrity testing
+   ************* Testing Individual Return Air Path Integrity
+   ************* All Return Air Paths passed integrity testing
+   ************* No node connection errors were found.
+   ************* Beginning Simulation
+   ************* Simulation Error Summary *************
+   ** Warning ** The following Report Variables were requested but not generated -- check.rdd file
+   **   ~~~   ** Either the IDF did not contain these elements, the variable name is misspelled,
+   **   ~~~   ** or the requested variable is an advanced output which requires Output : Diagnostics, DisplayAdvancedReportVariables;
+   ************* Key=*, VarName=ZONE VENTILATION FAN ELECTRICITY ENERGY, Frequency=Monthly
+   ************* Key=*, VarName=FAN ELECTRICITY RATE, Frequency=Monthly
+   ************* Key=*, VarName=ZONE VENTILATION FAN ELECTRICITY ENERGY, Frequency=RunPeriod
+   ************* Key=*, VarName=FAN ELECTRICITY RATE, Frequency=RunPeriod
+   ************* Key=Roof1:Zone1, VarName=ZONE PEOPLE SENSIBLE HEATING RATE, Frequency=Monthly
+   ************* Key=Roof1:Zone1, VarName=ZONE VENTILATION SENSIBLE HEAT LOSS ENERGY, Frequency=Monthly
+   ************* Key=Roof1:Zone1, VarName=ZONE VENTILATION SENSIBLE HEAT GAIN ENERGY, Frequency=Monthly
+   ************* Key=Roof1:Zone1, VarName=ZONE MIXING SENSIBLE HEAT LOSS ENERGY, Frequency=Monthly
+   ************* Key=Roof1:Zone1, VarName=ZONE MIXING SENSIBLE HEAT GAIN ENERGY, Frequency=Monthly
+   ************* Key=Roof1:Zone1, VarName=ZONE MIXING STANDARD DENSITY VOLUME FLOW RATE, Frequency=Monthly
+   ************* Key=Roof1:Zone1, VarName=ZONE OTHER EQUIPMENT TOTAL HEATING ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:Corridor, VarName=ZONE VENTILATION SENSIBLE HEAT LOSS ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:Corridor, VarName=ZONE VENTILATION SENSIBLE HEAT GAIN ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:Corridor, VarName=ZONE MIXING SENSIBLE HEAT LOSS ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:Corridor, VarName=ZONE MIXING SENSIBLE HEAT GAIN ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:Corridor, VarName=ZONE MIXING STANDARD DENSITY VOLUME FLOW RATE, Frequency=Monthly
+   ************* Key=GroundXfloor:LivingXroom, VarName=ZONE VENTILATION SENSIBLE HEAT LOSS ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:LivingXroom, VarName=ZONE VENTILATION SENSIBLE HEAT GAIN ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:LivingXroom, VarName=ZONE MIXING SENSIBLE HEAT LOSS ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:LivingXroom, VarName=ZONE MIXING SENSIBLE HEAT GAIN ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:LivingXroom, VarName=ZONE MIXING STANDARD DENSITY VOLUME FLOW RATE, Frequency=Monthly
+   ************* Key=GroundXfloor:BR2, VarName=ZONE VENTILATION SENSIBLE HEAT LOSS ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:BR2, VarName=ZONE VENTILATION SENSIBLE HEAT GAIN ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:BR2, VarName=ZONE MIXING SENSIBLE HEAT LOSS ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:BR2, VarName=ZONE MIXING SENSIBLE HEAT GAIN ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:BR2, VarName=ZONE MIXING STANDARD DENSITY VOLUME FLOW RATE, Frequency=Monthly
+   ************* Key=GroundXfloor:BR1, VarName=ZONE VENTILATION SENSIBLE HEAT LOSS ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:BR1, VarName=ZONE VENTILATION SENSIBLE HEAT GAIN ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:BR1, VarName=ZONE MIXING SENSIBLE HEAT LOSS ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:BR1, VarName=ZONE MIXING SENSIBLE HEAT GAIN ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:BR1, VarName=ZONE MIXING STANDARD DENSITY VOLUME FLOW RATE, Frequency=Monthly
+   ************* Key=GroundXfloor:BR3, VarName=ZONE VENTILATION SENSIBLE HEAT LOSS ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:BR3, VarName=ZONE VENTILATION SENSIBLE HEAT GAIN ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:BR3, VarName=ZONE MIXING SENSIBLE HEAT LOSS ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:BR3, VarName=ZONE MIXING SENSIBLE HEAT GAIN ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:BR3, VarName=ZONE MIXING STANDARD DENSITY VOLUME FLOW RATE, Frequency=Monthly
+   ************* Key=GroundXfloor:Bathroom, VarName=ZONE VENTILATION SENSIBLE HEAT LOSS ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:Bathroom, VarName=ZONE VENTILATION SENSIBLE HEAT GAIN ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:Bathroom, VarName=ZONE MIXING SENSIBLE HEAT LOSS ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:Bathroom, VarName=ZONE MIXING SENSIBLE HEAT GAIN ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:Bathroom, VarName=ZONE MIXING STANDARD DENSITY VOLUME FLOW RATE, Frequency=Monthly
+   ************* Key=GroundXfloor:Kitchen, VarName=ZONE VENTILATION SENSIBLE HEAT LOSS ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:Kitchen, VarName=ZONE VENTILATION SENSIBLE HEAT GAIN ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:Kitchen, VarName=ZONE MIXING SENSIBLE HEAT LOSS ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:Kitchen, VarName=ZONE MIXING SENSIBLE HEAT GAIN ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:Kitchen, VarName=ZONE MIXING STANDARD DENSITY VOLUME FLOW RATE, Frequency=Monthly
+   ************* Key=GroundXfloor:DiningXroom, VarName=ZONE VENTILATION SENSIBLE HEAT LOSS ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:DiningXroom, VarName=ZONE VENTILATION SENSIBLE HEAT GAIN ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:DiningXroom, VarName=ZONE MIXING SENSIBLE HEAT LOSS ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:DiningXroom, VarName=ZONE MIXING SENSIBLE HEAT GAIN ENERGY, Frequency=Monthly
+   ************* Key=GroundXfloor:DiningXroom, VarName=ZONE MIXING STANDARD DENSITY VOLUME FLOW RATE, Frequency=Monthly
+   ************* Key=Roof1:Zone1, VarName=ZONE PEOPLE SENSIBLE HEATING RATE, Frequency=RunPeriod
+   ************* Key=Roof1:Zone1, VarName=ZONE VENTILATION SENSIBLE HEAT LOSS ENERGY, Frequency=RunPeriod
+   ************* Key=Roof1:Zone1, VarName=ZONE VENTILATION SENSIBLE HEAT GAIN ENERGY, Frequency=RunPeriod
+   ************* Key=Roof1:Zone1, VarName=ZONE MIXING SENSIBLE HEAT LOSS ENERGY, Frequency=RunPeriod
+   ************* Key=Roof1:Zone1, VarName=ZONE MIXING SENSIBLE HEAT GAIN ENERGY, Frequency=RunPeriod
+   ************* Key=Roof1:Zone1, VarName=ZONE MIXING STANDARD DENSITY VOLUME FLOW RATE, Frequency=RunPeriod
+   ************* Key=Roof1:Zone1, VarName=ZONE OTHER EQUIPMENT TOTAL HEATING ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:Corridor, VarName=ZONE VENTILATION SENSIBLE HEAT LOSS ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:Corridor, VarName=ZONE VENTILATION SENSIBLE HEAT GAIN ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:Corridor, VarName=ZONE MIXING SENSIBLE HEAT LOSS ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:Corridor, VarName=ZONE MIXING SENSIBLE HEAT GAIN ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:Corridor, VarName=ZONE MIXING STANDARD DENSITY VOLUME FLOW RATE, Frequency=RunPeriod
+   ************* Key=GroundXfloor:LivingXroom, VarName=ZONE VENTILATION SENSIBLE HEAT LOSS ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:LivingXroom, VarName=ZONE VENTILATION SENSIBLE HEAT GAIN ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:LivingXroom, VarName=ZONE MIXING SENSIBLE HEAT LOSS ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:LivingXroom, VarName=ZONE MIXING SENSIBLE HEAT GAIN ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:LivingXroom, VarName=ZONE MIXING STANDARD DENSITY VOLUME FLOW RATE, Frequency=RunPeriod
+   ************* Key=GroundXfloor:BR2, VarName=ZONE VENTILATION SENSIBLE HEAT LOSS ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:BR2, VarName=ZONE VENTILATION SENSIBLE HEAT GAIN ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:BR2, VarName=ZONE MIXING SENSIBLE HEAT LOSS ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:BR2, VarName=ZONE MIXING SENSIBLE HEAT GAIN ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:BR2, VarName=ZONE MIXING STANDARD DENSITY VOLUME FLOW RATE, Frequency=RunPeriod
+   ************* Key=GroundXfloor:BR1, VarName=ZONE VENTILATION SENSIBLE HEAT LOSS ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:BR1, VarName=ZONE VENTILATION SENSIBLE HEAT GAIN ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:BR1, VarName=ZONE MIXING SENSIBLE HEAT LOSS ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:BR1, VarName=ZONE MIXING SENSIBLE HEAT GAIN ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:BR1, VarName=ZONE MIXING STANDARD DENSITY VOLUME FLOW RATE, Frequency=RunPeriod
+   ************* Key=GroundXfloor:BR3, VarName=ZONE VENTILATION SENSIBLE HEAT LOSS ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:BR3, VarName=ZONE VENTILATION SENSIBLE HEAT GAIN ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:BR3, VarName=ZONE MIXING SENSIBLE HEAT LOSS ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:BR3, VarName=ZONE MIXING SENSIBLE HEAT GAIN ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:BR3, VarName=ZONE MIXING STANDARD DENSITY VOLUME FLOW RATE, Frequency=RunPeriod
+   ************* Key=GroundXfloor:Bathroom, VarName=ZONE VENTILATION SENSIBLE HEAT LOSS ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:Bathroom, VarName=ZONE VENTILATION SENSIBLE HEAT GAIN ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:Bathroom, VarName=ZONE MIXING SENSIBLE HEAT LOSS ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:Bathroom, VarName=ZONE MIXING SENSIBLE HEAT GAIN ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:Bathroom, VarName=ZONE MIXING STANDARD DENSITY VOLUME FLOW RATE, Frequency=RunPeriod
+   ************* Key=GroundXfloor:Kitchen, VarName=ZONE VENTILATION SENSIBLE HEAT LOSS ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:Kitchen, VarName=ZONE VENTILATION SENSIBLE HEAT GAIN ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:Kitchen, VarName=ZONE MIXING SENSIBLE HEAT LOSS ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:Kitchen, VarName=ZONE MIXING SENSIBLE HEAT GAIN ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:Kitchen, VarName=ZONE MIXING STANDARD DENSITY VOLUME FLOW RATE, Frequency=RunPeriod
+   ************* Key=GroundXfloor:DiningXroom, VarName=ZONE VENTILATION SENSIBLE HEAT LOSS ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:DiningXroom, VarName=ZONE VENTILATION SENSIBLE HEAT GAIN ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:DiningXroom, VarName=ZONE MIXING SENSIBLE HEAT LOSS ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:DiningXroom, VarName=ZONE MIXING SENSIBLE HEAT GAIN ENERGY, Frequency=RunPeriod
+   ************* Key=GroundXfloor:DiningXroom, VarName=ZONE MIXING STANDARD DENSITY VOLUME FLOW RATE, Frequency=RunPeriod
+   ************* There are 1 unused objects in input.
+   ************* Use Output:Diagnostics,DisplayUnusedObjects; to see them.
+   ************* There are 17 unused schedules in input.
+   ************* There are 3 unused week schedules in input.
+   ************* There are 2 unused day schedules in input.
+   ************* Use Output:Diagnostics,DisplayUnusedSchedules; to see them.
+   *************
+   ************* ===== Recurring Error Summary =====
+   ************* The following recurring error messages occurred.
+   *************
+   *************  ** Warning ** Temperature out of range [-100. to 200.] (PsyPsatFnTemp)
+   *************  **   ~~~   **   This error occurred 8 total times;
+   *************  **   ~~~   **   during Warmup 0 times;
+   *************  **   ~~~   **   during Sizing 8 times.
+   *************  **   ~~~   **   Max=-1486.828369 C  Min=-3646.183228 C
+   *************
+   *************
+   ************* ===== Final Error Summary =====
+   ************* The following error categories occurred.  Consider correcting or noting.
+   ************* Nominally Unused Constructions
+   ************* ..The nominally unused constructions warning is provided to alert you to potential conditions that can cause
+   ************* ..extra time during simulation. Each construction is calculated by the algorithm indicated in the HeatBalanceAlgorithm
+   ************* ..object. You may remove the constructions indicated (when you use the DisplayExtraWarnings option).
+   *************
+   ************* EnergyPlus Warmup Error Summary. During Warmup: 0 Warning; 0 Severe Errors.
+   ************* EnergyPlus Sizing Error Summary. During Sizing: 20 Warning; 0 Severe Errors.
+   ************* EnergyPlus Completed Successfully-- 49 Warning; 0 Severe Errors; Elapsed Time=00hr 00min  3.19sec
