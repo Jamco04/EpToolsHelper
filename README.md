@@ -5,7 +5,7 @@ understand what comes out. Every file is picked with a Browse button, so no codi
 
 - **Explain warnings:** labels each warning in an `.err` file **FIX**, **CHECK** or **IGNORE** and explains it in plain English.
 - **Parameter study:** changes chosen inputs (insulation, window U-value, setpoints…) and runs every combination.
-- **Results:** one row per run with heating, hot water, unmet hours and warnings, plus a heat pump cost estimate.
+- **Results:** one row per run with heating, hot water, unmet heating hours (total and while occupied) and warnings, plus a heat pump cost estimate.
 - **Model browser:** shows every object and field in a model.
 
 Nothing is sent over the internet. All checks are fixed rules run on your own computer.

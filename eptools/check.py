@@ -49,6 +49,13 @@ class Rule:
 
 
 RULES = [
+    Rule("readvars-lock", r"readvars\.audit", FIX,
+         "Two runs clashed over ReadVarsESO's readvars.audit file",
+         "The simulation itself finished, but the step that writes the CSV (ReadVarsESO) failed. ReadVarsESO always "
+         "writes readvars.audit into the folder EnergyPlus was started from, not the output folder. When several runs "
+         "start from the same folder at once, they fight over that one file and Windows locks out all but one.",
+         "Re-run this case. Start each parallel run from its own folder (eptools 0.2.1 and later do this), "
+         "or run one at a time. Don't use the numbers until the re-run passes."),
     Rule("version", r"Version: in IDF=.*not the same as expected", FIX,
          "Model is from a different EnergyPlus version",
          "The IDF was written for another version of EnergyPlus. Field layouts change between versions, so the file may be misread.",
@@ -313,10 +320,19 @@ def read_table(path: Path | None) -> dict[str, float]:
             if row and row[0] in ("Heating", "Water Systems"):
                 total = sum(_num(v) or 0.0 for h, v in zip(header[1:], row[1:]) if "kWh" in h)
                 out["heating_kwh" if row[0] == "Heating" else "hot_water_kwh"] = total
-    for row in _table_rows(doc, "Time Setpoint Not Met"):
-        if row and row[0] == "Facility":
-            out["unmet_heating_h"] = _num(row[1])
-            out["unmet_occupied_heating_h"] = _num(row[3]) if len(row) > 3 else None
+    rows = _table_rows(doc, "Time Setpoint Not Met")
+    if rows:
+        # Columns: During Heating, During Cooling, During Occupied Heating, During Occupied Cooling.
+        # "During Heating" counts every hour the heating setpoint wasn't met, including nights and
+        # empty-house hours; "During Occupied Heating" only counts hours when people are in.
+        col = {h.split("[")[0].strip(): i for i, h in enumerate(rows[0])}
+        for row in rows[1:]:
+            if row and row[0] == "Facility":
+                for key, head in (("unmet_heating_h", "During Heating"),
+                                  ("unmet_occupied_heating_h", "During Occupied Heating")):
+                    i = col.get(head)
+                    if i is not None and i < len(row):
+                        out[key] = _num(row[i])
     if out.get("floor_area_m2") and "heating_kwh" in out:
         out["heating_kwh_m2"] = out["heating_kwh"] / out["floor_area_m2"]
     return out
@@ -384,7 +400,9 @@ def compare(run: RunResult, base: RunResult) -> None:
         if rc.get(rid, 0) != bc.get(rid, 0):
             title = next((g.rule.title for g in run.groups + base.groups if g.rule.id == rid), rid)
             run.baseline_notes.append(f"'{title}': {bc.get(rid, 0)} in baseline, {rc.get(rid, 0)} in this run")
-    for key, label in [("heating_kwh", "Space heating"), ("hot_water_kwh", "Hot water"), ("unmet_heating_h", "Unmet heating hours")]:
+    for key, label in [("heating_kwh", "Space heating"), ("hot_water_kwh", "Hot water"),
+                       ("unmet_heating_h", "Unmet heating hours"),
+                       ("unmet_occupied_heating_h", "Unmet heating hours while occupied")]:
         a, b = run.numbers.get(key), base.numbers.get(key)
         if a is not None and b:
             run.baseline_notes.append(f"{label}: {b:,.0f} -> {a:,.0f} ({(a - b) / b:+.1%})")
@@ -413,7 +431,9 @@ def print_text(run: RunResult, quiet: bool) -> None:
         if "floor_area_m2" in n:
             bits.append(f"floor {n['floor_area_m2']:.1f} m2")
         if n.get("unmet_heating_h") is not None:
-            bits.append(f"unmet heating {n['unmet_heating_h']:.0f} h")
+            bits.append(f"unmet heating {n['unmet_heating_h']:g} h")
+        if n.get("unmet_occupied_heating_h") is not None:
+            bits.append(f"of which occupied {n['unmet_occupied_heating_h']:g} h")
         print("  " + ", ".join(bits))
     for note in run.file_notes:
         print(f"  ! {note}")
@@ -448,14 +468,15 @@ def write_html(runs: list[RunResult], path: Path) -> None:
              "h2{margin-top:32px}.tag{display:inline-block;color:#fff;border-radius:4px;padding:0 6px;font-size:12px;font-weight:600}"
              "td,th{text-align:left;padding:4px 10px;border-bottom:1px solid #ddd;vertical-align:top}table{border-collapse:collapse;width:100%}"
              "small{color:#555}</style><h1>EnergyPlus run check</h1>"]
-    parts.append("<table><tr><th>Run</th><th>Status</th><th>Warnings</th><th>Severe</th><th>Heating kWh</th><th>kWh/m2</th><th>Unmet h</th></tr>")
+    parts.append("<table><tr><th>Run</th><th>Status</th><th>Warnings</th><th>Severe</th><th>Heating kWh</th><th>kWh/m2</th><th>Unmet heating h</th><th>Unmet h occupied</th></tr>")
     for r in runs:
         n = r.numbers
         parts.append(f"<tr><td><a href='#{esc(r.name)}'>{esc(r.name)}</a></td>"
                      f"<td><span class='tag' style='background:{colour[r.status]}'>{r.status}</span></td>"
                      f"<td>{r.err.n_warnings}</td><td>{r.err.n_severe}</td>"
                      f"<td>{n.get('heating_kwh', 0):,.0f}</td><td>{n.get('heating_kwh_m2', 0):.0f}</td>"
-                     f"<td>{(n.get('unmet_heating_h') or 0):.0f}</td></tr>")
+                     f"<td>{(n.get('unmet_heating_h') or 0):g}</td>"
+                     f"<td>{(n.get('unmet_occupied_heating_h') or 0):g}</td></tr>")
     parts.append("</table>")
     for r in runs:
         parts.append(f"<h2 id='{esc(r.name)}'>{esc(r.name)} <span class='tag' style='background:{colour[r.status]}'>{r.status}</span></h2>")

@@ -130,10 +130,11 @@ class CheckTab(ttk.Frame):
 
         panes = ttk.PanedWindow(self, orient="vertical")
         panes.pack(fill="both", expand=True)
-        cols = ("status", "warnings", "severe", "heating", "per_m2", "unmet")
+        cols = ("status", "warnings", "severe", "heating", "per_m2", "unmet", "unmet_occ")
         f1, self.runs = scrolled(panes, ttk.Treeview, columns=cols, height=5)
-        for c, w, t in zip(("#0",) + cols, (240, 90, 80, 70, 110, 80, 90),
-                           ("Run", "Status", "Warnings", "Severe", "Heating kWh", "kWh/m²", "Unmet h")):
+        for c, w, t in zip(("#0",) + cols, (240, 90, 80, 70, 110, 80, 110, 130),
+                           ("Run", "Status", "Warnings", "Severe", "Heating kWh", "kWh/m²",
+                            "Unmet heating h", "Unmet h occupied")):
             self.runs.heading(c, text=t)
             self.runs.column(c, width=w, anchor="w" if c == "#0" else "center")
         self.runs.bind("<<TreeviewSelect>>", lambda e: self.show_run())
@@ -205,7 +206,8 @@ class CheckTab(ttk.Frame):
             fmt = lambda k, f="{:,.0f}": f.format(n[k]) if n.get(k) is not None else ""
             self.runs.insert("", "end", iid=str(len(self.results) - 1), text=f"{r.name}  ({Path(p).name})",
                              values=(r.status, r.err.n_warnings, r.err.n_severe, fmt("heating_kwh"),
-                                     fmt("heating_kwh_m2"), fmt("unmet_heating_h")), tags=(r.status,))
+                                     fmt("heating_kwh_m2"), fmt("unmet_heating_h", "{:g}"),
+                                     fmt("unmet_occupied_heating_h", "{:g}")), tags=(r.status,))
         if self.results:
             self.runs.selection_set("0")
 

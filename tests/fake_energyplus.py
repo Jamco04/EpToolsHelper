@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 """Stand-in for EnergyPlus used by the tests: copies a real run's outputs and writes a small hourly .eso."""
+import os
 import shutil
 import sys
+import time
 from pathlib import Path
 
 DATA = Path(__file__).parent / "data"
@@ -27,3 +29,25 @@ for hour in range(1, 25):
     lines += [f"7,{scale * 3.6e6 * (hour % 3)}", f"8,{3.6e6}", f"9,{scale * 3.6e6 * (hour % 3) + 3.6e6}"]
 lines += ["End of Data", " Number of Records Written=          100"]
 (out / "eplusout.eso").write_text("\n".join(lines) + "\n")
+
+if "-r" in sys.argv:
+    # Copy what the real EnergyPlus does with -r: ReadVarsESO writes "readvars.audit" into the
+    # folder EnergyPlus was *started from* (not the -d output folder), and EnergyPlus then moves
+    # it to <output>/eplusout.rvaudit. On Windows a second process can't touch that file while
+    # another has it open; O_EXCL stands in for that lock so the clash shows up on any OS.
+    audit = Path.cwd() / "readvars.audit"
+    try:
+        fd = os.open(audit, os.O_CREAT | os.O_EXCL | os.O_WRONLY)
+    except FileExistsError:
+        err = (out / "eplusout.err").read_text(errors="replace").splitlines()
+        err = [line for line in err if "Completed Successfully" not in line]
+        err += ["   ** Severe  ** filesystem error: cannot remove: The process cannot access the file because "
+                "it is being used by another process. [readvars.audit]",
+                "   ************* EnergyPlus Terminated--Fatal Error Detected. 49 Warning; 1 Severe Errors; "
+                "Elapsed Time=00hr 00min  3.19sec"]
+        (out / "eplusout.err").write_text("\n".join(err) + "\n")
+        sys.exit(1)
+    with os.fdopen(fd, "w") as f:
+        f.write((DATA / "bungalow.rvaudit").read_text(errors="replace"))
+        time.sleep(0.5)          # ReadVarsESO takes a moment; parallel runs overlap here
+    shutil.move(str(audit), str(out / "eplusout.rvaudit"))

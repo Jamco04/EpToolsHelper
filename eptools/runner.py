@@ -276,15 +276,23 @@ def simulate(study: Study, run: Run, timeout: int) -> str:
     if run.folder.exists():
         shutil.rmtree(run.folder)
     write_inputs(run)
-    cmd = [study.energyplus, "-w", str(study.weather), "-d", str(run.folder)]
+    folder = run.folder.resolve()
+    cmd = [study.energyplus, "-w", str(Path(study.weather).resolve()), "-d", str(folder)]
     if study.readvars:
         cmd.append("-r")
-    cmd.append(str(run.folder / "in.idf"))
+    cmd.append(str(folder / "in.idf"))
     try:
         # CREATE_NO_WINDOW stops a console window flashing up for every run when
         # the study is started from the desktop window on Windows.
         flags = getattr(subprocess, "CREATE_NO_WINDOW", 0)
-        p = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, creationflags=flags)
+        # cwd=folder matters when runs go in parallel. EnergyPlus -d only moves the main
+        # outputs: ReadVarsESO (-r) writes readvars.audit into the folder EnergyPlus was
+        # started from, and EnergyPlus then moves it to eplusout.rvaudit (ExpandObjects and
+        # EPMacro also use that folder). If every run starts from the same folder, parallel
+        # runs fight over one readvars.audit and, on Windows, all but one fail with a
+        # "file in use" error. Starting each run in its own folder keeps them apart.
+        p = subprocess.run(cmd, capture_output=True, text=True, timeout=timeout, creationflags=flags,
+                           cwd=folder)
         (run.folder / "stdout.txt").write_text(p.stdout + "\n" + p.stderr)
         return "ran" if p.returncode == 0 else f"exit code {p.returncode}"
     except subprocess.TimeoutExpired:
@@ -306,7 +314,8 @@ def collect(study: Study, run: Run, how: str) -> tuple[dict, check.RunResult | N
     res = check.summarise(run.folder)
     res.name = run.id
     row.update(status=res.status, warnings=res.err.n_warnings, severe=res.err.n_severe)
-    for k in ("heating_kwh", "hot_water_kwh", "floor_area_m2", "heating_kwh_m2", "unmet_heating_h"):
+    for k in ("heating_kwh", "hot_water_kwh", "floor_area_m2", "heating_kwh_m2",
+              "unmet_heating_h", "unmet_occupied_heating_h"):
         v = res.numbers.get(k)
         row[k] = round(v, 2) if isinstance(v, float) else v
     eso_path = run.folder / "eplusout.eso"

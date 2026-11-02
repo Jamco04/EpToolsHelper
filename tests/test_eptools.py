@@ -68,6 +68,30 @@ class CheckTests(unittest.TestCase):
         self.assertEqual(res.numbers["unmet_heating_h"], 487.0)
         self.assertTrue(any("255" in n for n in res.file_notes))
 
+    def test_occupied_unmet_hours_read_by_column_name(self):
+        # Like Eoghan's run: 141 h unmet in total but only 0.5 h while the house is occupied.
+        doc = (DATA / "bungalow_table.html").read_text(errors="replace")
+        facility = ('<td align="right">Facility</td>\n    <td align="right">     487.00</td>\n'
+                    '    <td align="right">       0.00</td>\n    <td align="right">       0.00</td>')
+        self.assertIn(facility, doc)
+        doc = doc.replace(facility, facility.replace("487.00", "141.00").rsplit("0.00", 1)[0] + "0.50</td>")
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / "eplustbl.htm"
+            p.write_text(doc)
+            n = check.read_table(p)
+        self.assertEqual(n["unmet_heating_h"], 141.0)
+        self.assertEqual(n["unmet_occupied_heating_h"], 0.5)
+
+    def test_readvars_lock_is_explained(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = Path(d) / "eplusout.err"
+            p.write_text("Program Version,EnergyPlus, Version 26.2.0\n"
+                         "   ** Severe  ** filesystem error: cannot remove: The process cannot access the file "
+                         "because it is being used by another process. [readvars.audit]\n"
+                         "   ************* EnergyPlus Terminated--Fatal Error Detected. 0 Warning; 1 Severe Errors;\n")
+            res = check.summarise(p)
+        self.assertEqual(res.groups[0].rule.id, "readvars-lock")
+
     def test_failed_run(self):
         with tempfile.TemporaryDirectory() as d:
             p = Path(d) / "eplusout.err"
@@ -108,6 +132,41 @@ class RunnerTests(unittest.TestCase):
             text = (d / "runs" / "run_0001" / "in.idf").read_text(encoding="latin-1")
             self.assertNotIn("Zone Mean Air Temperature,Monthly", text)
             self.assertTrue((d / "runs" / "check_report.html").exists())
+
+    def test_parallel_runs_do_not_share_readvars_audit(self):
+        # EnergyPlus -r leaves readvars.audit in the folder it was started from. If every run
+        # starts from the same folder, parallel runs fight over that one file and all but one fail.
+        with tempfile.TemporaryDirectory() as d:
+            d = Path(d)
+            study = runner.Study.from_dict({
+                "energyplus": str(ROOT / "tests" / "fake_energyplus.py"),
+                "weather": str(DATA / "tiny.epw"),
+                "output_dir": str(d / "runs"),
+                "models": {"tiny": str(DATA / "tiny.idf")},
+                "parameters": {"window_u": {"object": "WindowMaterial:SimpleGlazingSystem",
+                                            "field": "U-Factor", "values": [3.0, 2.0, 1.4, 1.0]}},
+                "jobs": 4,
+            }, d)
+            self.assertEqual(runner.run_study(study, log=lambda t: None), 0)
+            with open(d / "runs" / "results.csv", newline="") as f:
+                rows = list(csv.DictReader(f))
+            self.assertEqual([r["status"] for r in rows], ["OK"] * 4)
+            for n in range(1, 5):
+                self.assertTrue((d / "runs" / f"run_{n:04d}" / "eplusout.rvaudit").exists())
+            self.assertFalse((Path.cwd() / "readvars.audit").exists())
+
+    def test_results_include_occupied_unmet_hours(self):
+        with tempfile.TemporaryDirectory() as d:
+            d = Path(d)
+            study = runner.Study.from_dict({
+                "energyplus": str(ROOT / "tests" / "fake_energyplus.py"),
+                "weather": str(DATA / "tiny.epw"), "output_dir": str(d / "runs"),
+                "models": {"tiny": str(DATA / "tiny.idf")}}, d)
+            runner.run_study(study, log=lambda t: None)
+            with open(d / "runs" / "results.csv", newline="") as f:
+                row = next(csv.DictReader(f))
+            self.assertEqual(row["unmet_heating_h"], "487.0")
+            self.assertEqual(row["unmet_occupied_heating_h"], "0.0")
 
     def test_typo_stops_before_running(self):
         with tempfile.TemporaryDirectory() as d:

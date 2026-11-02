@@ -70,13 +70,22 @@ python -m eptools run my_study.json --jobs 4
 python -m eptools run my_study.json --jobs 4 --resume    # skip runs that already finished
 ```
 
+`--jobs` runs several simulations at once. Each one starts EnergyPlus inside its own run folder.
+If you drive EnergyPlus in parallel from your own script, do the same (for example
+`subprocess.run(cmd, cwd=run_folder)`): with `-r`, ReadVarsESO writes `readvars.audit` into the
+folder EnergyPlus was started from, so parallel runs started from one folder clash over it.
+
 Before starting, the runner checks that each model's version matches EnergyPlus.
 
 **5. Results.** These are written to the study's `output_dir`:
 
 - `results.csv` has one row per run: the parameters, status (`OK`, `SUSPECT`, `FAILED`),
   warning and severe counts, heating and hot water kWh, kWh/m², unmet heating hours, and the
-  annual total and peak of each `collect.hourly` output.
+  annual total and peak of each `collect.hourly` output. There are two unmet-hours columns, both
+  from the "Time Setpoint Not Met" table in the HTML report: `unmet_heating_h` counts every hour
+  the heating setpoint wasn't reached (nights and empty-house hours too), and
+  `unmet_occupied_heating_h` counts only the hours when people are in. Use the occupied figure
+  for comfort.
 - `check_report.html` explains the warnings of every run.
 - `run_0001/` … each contain the edited model, the EnergyPlus output and `hourly.csv`.
 
