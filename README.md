@@ -17,6 +17,11 @@ Nothing is sent over the internet. All checks are fixed rules run on your own co
 
 That's it. Double-click `eptools.exe` to open the app.
 
+> **"Windows protected your PC"?** Windows shows this for any new app that isn't signed with
+> a paid certificate, and this free student tool isn't. Click **More info → Run anyway**.
+> The full source code is in this repo. If you'd rather not run the exe, use the Python option
+> below instead. It opens the same app from the code you can read here.
+
 > No exe, or not on Windows? Install [Python](https://www.python.org/downloads/) (tick
 > "Add python.exe to PATH"), download this repo with **Code → Download ZIP**, unzip it and
 > double-click **`Start eptools.bat`**. On a Mac or Linux run `python3 -m eptools` in the
