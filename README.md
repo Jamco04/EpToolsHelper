@@ -58,6 +58,10 @@ Use **Save study…** to keep the set-up and **Open study…** to load it again.
   That is heat delivered, not electricity.
 - Labels are guidance. If unsure about a warning, search the message on [Unmet Hours](https://unmethours.com/).
 - Each run's folder has `changes.csv` listing exactly what was changed in the model.
+- Results show two unmet heating figures: **total** (every hour the setpoint wasn't reached) and
+  **while occupied**. Use the occupied one for comfort.
+- Several runs at once ("Runs at once") are fine. Each run starts in its own folder, which stops
+  them clashing over EnergyPlus's `readvars.audit` file. See [CHANGELOG.md](CHANGELOG.md).
 
 Command-line use, the study file format and how to add new warning rules are in
 [docs/REFERENCE.md](docs/REFERENCE.md).

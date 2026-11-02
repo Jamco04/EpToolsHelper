@@ -576,6 +576,8 @@ class StudyTab(ttk.Frame):
         ttk.Combobox(opts, textvariable=self.timestep, width=14, state="readonly",
                      values=["Keep model's", "1", "2", "4", "6", "10", "12"]).grid(row=0, column=1, sticky="w", padx=6)
         ttk.Label(opts, text="Runs at once").grid(row=0, column=2, sticky="w", padx=(16, 0))
+        # Parallel runs are safe because the runner starts each EnergyPlus in its own run folder
+        # (see runner.simulate), so half the cores is a reasonable default.
         self.jobs = tk.IntVar(value=max(1, (os.cpu_count() or 2) // 2))
         ttk.Spinbox(opts, from_=1, to=64, textvariable=self.jobs, width=5).grid(row=0, column=3, sticky="w", padx=6)
         ttk.Label(opts, text="Only the first").grid(row=0, column=4, sticky="w", padx=(16, 0))
